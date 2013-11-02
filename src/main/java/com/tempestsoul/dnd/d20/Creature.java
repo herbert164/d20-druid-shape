@@ -42,15 +42,6 @@ class Animal {
     List<SpecialAttack> specialAttacks;
     int iSpace; int iReach;
 }
-class Attack {
-    name
-    dmgDie
-    isPrimary
-    critRange
-    critMult
-    dmgType // P=1xx,S=x1x,B=xx1
-    // additional
-}
 class SpecialAttack {
     name
     text
@@ -69,7 +60,7 @@ class SpecialAttack {
         getHideBonus() {return this.intValue() * 4; }
     }
  */
-public class D20Character {
+public class Creature {
 	String sName;
 	int iNumHitDice;
 	int iHitPoints;
@@ -93,15 +84,16 @@ public class D20Character {
 	String sMovement;
 	int iNaturalArmor;
 	
-	public D20Character() { }
-	public D20Character(D20Character c) {/* TODO implement */}
+	public Creature() { }
+	public Creature(Creature c) {/* TODO implement */}
 	
-	public D20Character wildShape(D20Character creature) {
+	// TODO move to separate class? really a class ability, not something a character does...
+	public Creature wildShape(Creature creature) {
 		if(creature.iNumHitDice > this.iNumHitDice) {
 			throw new IllegalArgumentException("A druid cannot wild shape into creatures with more hit dice");
 		}
 		// TODO finish implementing
-		D20Character shape = new D20Character(this);
+		Creature shape = new Creature(this);
 		shape.size = creature.size;
 		shape.setPhysicalScores(creature.stats);
 		shape.attacks = creature.attacks;
