@@ -4,7 +4,7 @@
 .project
 
 # Package Files #
-#*.jar
+*.jar
 *.war
 *.ear
 *.xls
