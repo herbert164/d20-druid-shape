@@ -58,7 +58,7 @@ public class Creature {
 	List<Skill> skills;
 	List<String> feats;
 	// could be calculated...
-	int iBaseAtkBonus; // 3/4 druid level (if only druid)
+	int iBaseAtkBonus; // 3/4 druid level (if only druid); should be set by class level instead?
 	int iBaseFort; // good
 	int iBaseRef; // poor
 	int iBaseWill; // good
@@ -239,13 +239,18 @@ public class Creature {
 			}
 		}
 	}
-	private Skill getSkillByName(String skillName) {
+	
+	// should really think about some kind of skill wrapper or way to access the map...
+	public Skill getSkillByName(String skillName) {
+		if(skills == null)
+			return null;
 		for(Skill skill : skills) {
 			if(skill.getName().equalsIgnoreCase(skillName))
 				return skill;
 		}
 		return null;
 	}
+	
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
