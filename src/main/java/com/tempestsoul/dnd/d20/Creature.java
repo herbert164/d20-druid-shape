@@ -47,7 +47,7 @@ class Animal {
  */
 public class Creature {
 	String sName;
-	int iNumHitDice;
+	double numHitDice;
 	int iHitPoints;
 	int iDruidLvl;
 	CreatureType type;
@@ -72,7 +72,7 @@ public class Creature {
 	public Creature() { }
 	public Creature(Creature c) {
 		sName = c.sName;
-		iNumHitDice = c.iNumHitDice;
+		numHitDice = c.numHitDice;
 		iHitPoints = c.iHitPoints;
 		iDruidLvl = c.iDruidLvl;
 		type = c.type;
@@ -92,14 +92,20 @@ public class Creature {
 	}
 	
 	// move to separate class? really a class ability, not something a character does...
+	//http://www.wizards.com/default.asp?x=dnd/rg/20060523a
 	public Creature wildShape(Creature animal) {
-		if(animal.iNumHitDice > this.iNumHitDice) {
+		if(iDruidLvl < 5) {
+			throw new RuntimeException("Druids cannot wild shape until level 5; druid level is " + iDruidLvl);
+		}
+		if(animal.numHitDice > numHitDice) {
 			throw new IllegalArgumentException("A druid cannot wild shape into creatures with more hit dice");
 		}
-		// TODO finish implementing
+		// check size & type: based on druid lvl (or does type go into separate functions? elemental should)
+		// TODO finish implementing (is anything left?)
 		Creature shape = new Creature(this);
 		// size: wild shape
 		shape.size = animal.size;
+		// TODO (space/reach: wild shape)
 		// physical ability scores: shape
 		// mental ability scores: druid
 		shape.setPhysicalScores(animal.stats);
@@ -113,9 +119,12 @@ public class Creature {
 		shape.iNaturalArmor = animal.iNaturalArmor;
 		// movement: shape
 		shape.movement = animal.movement;
+		// TODO don't forget the skill bonuses from movement speeds!
+		
 		// lose Ex special attacks
 		for(SpecialAttack atk : this.specialAtks) {
-			shape.specialAtks.remove(atk);
+			if(atk.type.equals(SpecialAbilityType.EXTRAORDINARY))
+				shape.specialAtks.remove(atk);
 		}
 		// special attacks(Ex): shape
 		for(SpecialAttack atk : animal.specialAtks) {
@@ -124,6 +133,8 @@ public class Creature {
 					|| atkType.equals(SpecialAbilityType.NATURAL))
 				shape.specialAtks.add(atk);
 		}
+		// NOT animal's racial skills, special qualities, type abilities, etc
+		
 		return shape;
 	}
 	
@@ -132,6 +143,7 @@ public class Creature {
 			stats.put(stat, src.get(stat));
 		}
 	}
+	
 	private void setMentalScores(Map<Ability, AbilityScore> src) {
 		for(Ability stat : Ability.mentalScores) {
 			stats.put(stat, src.get(stat));
@@ -144,26 +156,31 @@ public class Creature {
 			return null;
 		return iBaseFort + score.getModifier(); // + miscellaneous
 	}
+	
 	public Integer getRefSave() {
 		AbilityScore score = stats.get(Ability.DEX);
 		if(score == null) 
 			return null;
 		return iBaseRef + score.getModifier(); // + miscellaneous
 	}
+	
 	public Integer getWillSave() {
 		AbilityScore score = stats.get(Ability.WIS);
 		if(score == null) 
 			return null;
 		return iBaseWill + score.getModifier(); // + miscellaneous
 	}
+	
 	public int getArmorCount() {
 		// TODO implement
 		return 10 + stats.get(Ability.DEX).getModifier() + iNaturalArmor + size.getSizeMod();
 	}
+	
 	public int getTouchArmorCount() {
 		// TODO implement
 		return 10 + stats.get(Ability.DEX).getModifier() + size.getSizeMod();
 	}
+	
 	public int getFlatArmorCount() {
 		// TODO implement
 		return 10 + iNaturalArmor + size.getSizeMod();
@@ -176,48 +193,67 @@ public class Creature {
 	public String getName() {
 		return sName;
 	}
+	
 	public void setName(String name) {
 		this.sName = name;
 	}
-	public int getNumHitDice() {
-		return iNumHitDice;
+	
+	public double getNumHitDice() {
+		return numHitDice;
 	}
+	
 	public void setNumHitDice(int numHitDice) {
-		this.iNumHitDice = numHitDice;
+		this.numHitDice = numHitDice;
 	}
+	
+	public void setNumHitDice(double numHitDice) {
+		this.numHitDice = numHitDice;
+	}
+	
 	public int getHitPoints() {
 		return iHitPoints;
 	}
+	
 	public void setHitPoints(int hitPoints) {
 		this.iHitPoints = hitPoints;
 	}
+	
 	public int getDruidLvl() {
 		return iDruidLvl;
 	}
+	
 	public void setDruidLvl(int druidLvl) {
 		this.iDruidLvl = druidLvl;
 	}
+	
 	public CreatureType getType() {
 		return type;
 	}
+	
 	public void setType(CreatureType type) {
 		this.type = type;
 	}
+	
 	public List<CreatureSubType> getSubTypes() {
 		return subTypes;
 	}
+	
 	public void setSubTypes(List<CreatureSubType> subTypes) {
 		this.subTypes = subTypes;
 	}
+	
 	public Size getSize() {
 		return size;
 	}
+	
 	public void setSize(Size size) {
 		this.size = size;
 	}
+	
 	public Map<Ability, AbilityScore> getStats() {
 		return stats;
 	}
+	
 	public void setStats(Map<Ability, AbilityScore> stats) {
 		this.stats = stats;
 	}
@@ -225,6 +261,7 @@ public class Creature {
 	public List<Skill> getSkills() {
 		return skills;
 	}
+	
 	/**
 	 * 
 	 * @param skillRanks
@@ -258,6 +295,7 @@ public class Creature {
 	public List<String> getFeats() {
 		return feats;
 	}
+	
 	public void setFeats(List<String> feats) {
 		this.feats = feats;
 	}
@@ -265,48 +303,63 @@ public class Creature {
 	public int getBaseAtkBonus() {
 		return iBaseAtkBonus;
 	}
+	
 	public void setBaseAtkBonus(int baseAtkBonus) {
 		this.iBaseAtkBonus = baseAtkBonus;
 	}
+	
 	public int getBaseFort() {
 		return iBaseFort;
 	}
+	
 	public void setBaseFort(int iBaseFort) {
 		this.iBaseFort = iBaseFort;
 	}
+	
 	public int getBaseRef() {
 		return iBaseRef;
 	}
+	
 	public void setBaseRef(int iBaseRef) {
 		this.iBaseRef = iBaseRef;
 	}
+	
 	public int getBaseWill() {
 		return iBaseWill;
 	}
+	
 	public void setBaseWill(int iBaseWill) {
 		this.iBaseWill = iBaseWill;
 	}
+	
 	public List<Attack> getAttacks() {
 		return attacks;
 	}
+	
 	public void setAttacks(List<Attack> attacks) {
 		this.attacks = attacks;
 	}
+	
 	public List<SpecialAttack> getSpecialAtks() {
 		return specialAtks;
 	}
+	
 	public void setSpecialAtks(List<SpecialAttack> specialAtks) {
 		this.specialAtks = specialAtks;
 	}
+	
 	public String getMovement() {
 		return movement;
 	}
+	
 	public void setMovement(String movement) {
 		this.movement = movement;
 	}
+	
 	public int getNaturalArmor() {
 		return iNaturalArmor;
 	}
+	
 	public void setNaturalArmor(int naturalArmor) {
 		this.iNaturalArmor = naturalArmor;
 	}
