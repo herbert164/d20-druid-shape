@@ -28,8 +28,25 @@ public class HeroForgeLoaderTest {
 		assertEquals(Size.Medium, nimue.getSize());
 		assertEquals(CreatureType.HUMANOID, nimue.getType());
 		assertNotNull(nimue.getStats());
-		//assertEquals(nimue.getHitPoints());
+		assertEquals(51, nimue.getHitPoints());
 		assertEquals(6, nimue.getBaseAtkBonus());
+		assertEquals(6, nimue.getBaseFort());
+		assertEquals(2, nimue.getBaseRef());
+		assertEquals(6, nimue.getBaseWill());
+		assertEquals(7, nimue.getFortSave().intValue());
+		assertEquals(4, nimue.getRefSave().intValue());
+		assertEquals(11, nimue.getWillSave().intValue());
 		// TODO create tests (expected, actual)
+		// test for racial skill enhancements
+//		assertEquals(new Integer(2), nimue.getSkillByName("Listen").getMiscBonusTotal());
+//		assertEquals(new Integer(2), nimue.getSkillByName("Search").getMiscBonusTotal());
+//		assertEquals(new Integer(2), nimue.getSkillByName("Spot").getMiscBonusTotal());
+		// test for class skill enhancements (ugh)
+//		assertEquals(new Integer(2), nimue.getSkillByName("Knowledge(nature)").getMiscBonusTotal());
+//		assertEquals(new Integer(2), nimue.getSkillByName("Survival").getMiscBonusTotal());
+		// test for parsed skill ranks
+//		assertEquals(new Integer(9), nimue.getSkillByName("Survival").getRanks());
+//		assertEquals(new Integer(1), nimue.getSkillByName("Move Silently").getRanks());
+		// test for loaded feats
 	}
 }

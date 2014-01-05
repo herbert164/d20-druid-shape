@@ -30,6 +30,7 @@ public class AbilityScore {
 	
 	@Override
 	public String toString() {
-		return getScore() + " (" + getModifier() + ")";
+		// two integers in sequence, with the second always having a sign
+		return String.format("%d(%+d)", getScore(), getModifier());
 	}
 }
