@@ -17,6 +17,7 @@ import com.tempestsoul.dnd.service.CharacterStubLoader;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class PreviewLoadingWindow {
 
@@ -62,7 +63,8 @@ public class PreviewLoadingWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		final CharacterStubLoader hiThere = new CharacterStubLoader();
+		final File file = null;
+		final CharacterStubLoader charStubLoader = new CharacterStubLoader();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,7 +170,7 @@ public class PreviewLoadingWindow {
 		JButton btnLoadData = new JButton("Load Data");
 		btnLoadData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				txtHitpoints.setText(""+hiThere.loadCharacter(/*C:\Users\Robert\file.txt*/).getHitPoints());
+				txtHitpoints.setText(""+charStubLoader.loadCharacter(file).getHitPoints());
 			}
 		});
 		buttonPanel.add(btnLoadData);
