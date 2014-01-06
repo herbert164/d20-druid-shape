@@ -12,6 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.AbstractListModel;
 
+import com.tempestsoul.dnd.d20.Creature;
+import com.tempestsoul.dnd.service.CharacterStubLoader;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class PreviewLoadingWindow {
 
 	private JFrame frame;
@@ -56,6 +62,7 @@ public class PreviewLoadingWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		final CharacterStubLoader hiThere = new CharacterStubLoader();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -140,9 +147,9 @@ public class PreviewLoadingWindow {
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane);
 		
-		JList list = new JList();
+		JList<Creature> list = new JList<Creature>();
 		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"we", "we", "we", "we", "w", "e", "wr", "e", "", "ewr", "w", "w", "e", "we", "w", "e", "we", "w", "e", "we", "w", "e", "we", "w", "e", "w", "e", "we", "w", "e", "we", "w", "e", "w", "we", "we", "we", "ew", "we", "we"};
+			String[] values = new String[] {};
 			public int getSize() {
 				return values.length;
 			}
@@ -159,6 +166,11 @@ public class PreviewLoadingWindow {
 		buttonPanel.add(btnSaveData);
 		
 		JButton btnLoadData = new JButton("Load Data");
+		btnLoadData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtHitpoints.setText(""+hiThere.loadCharacter(/*C:\Users\Robert\file.txt*/).getHitPoints());
+			}
+		});
 		buttonPanel.add(btnLoadData);
 		
 		JPanel previewOutputPanel = new JPanel();
